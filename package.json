@@ -1,0 +1,17 @@
+{
+  "name": "fox-cli",
+  "version": "1.0.0",
+  "description": "A CLI tool to upload file to your Dropbox and generate QR code for the shared link",
+  "main": "src/index.js",
+  "bin": {
+    "fox": "bin/fox"
+  },
+  "author": "kwrush (Kai Wang)",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^6.1.0",
+    "dotenv": "^8.2.0",
+    "dropbox": "^7.0.0"
+  }
+}
