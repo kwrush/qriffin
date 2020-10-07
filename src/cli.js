@@ -6,13 +6,15 @@ const chalk = require('chalk');
 (() => {
   const meta = require('../package.json');
 
-  program.version(chalk.cyan(`fox-cli v${meta.version}`), '-v, --version').usage('[--options] <file>').parse(process.argv);
+  program
+    .version(chalk.cyan(`fox-cli v${meta.version}`), '-v, --version')
+    .usage('[--options] <file>')
+    .parse(process.argv);
 
   const [file] = program.args;
-  runCli(file, program.opts());
+  runCli(file);
 })();
 
-function runCli(file, options) {
+function runCli(file) {
   console.log(file);
 }
-
