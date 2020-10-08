@@ -17,13 +17,29 @@ const createQRCode = require('./utils/createQRCode');
   program
     .version(chalk.cyan(`fox-cli v${meta.version}`), '-v, --version')
     .usage('[--options] <file>')
+    .option(
+      '-c, --clear',
+      'clear the locally stored refresh token and quit the program',
+    )
     .parse(process.argv);
 
   const [file] = program.args;
-  await runCli(file, config);
+  await runCli(file, program.opts(), config);
 })();
 
-async function runCli(file, config) {
+async function runCli(file, options, config) {
+  const { clear } = options;
+
+  if (clear) {
+    config.delete(process.env.TOKEN_KEY);
+    console.log(
+      chalk.cyan(
+        'Refresh token has been deleted, authorization is required next time.',
+      ),
+    );
+    return process.exit(0);
+  }
+
   const spinner = ora('Starting...\n').start();
   try {
     const dbx = await setupDbx(spinner, config);
