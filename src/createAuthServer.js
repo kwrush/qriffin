@@ -49,9 +49,9 @@ module.exports = async (dbxAuth) => {
 function openBrowser(url) {
   return () => {
     console.log(
-      chalk.cyan(
-        `If your browser doesn't open automatically, please open this link manually: ${url}\n`,
-      ),
+      `If your browser doesn't open automatically, please open this link manually: ${chalk.green.underline(
+        url,
+      )}\n`,
     );
 
     opn(url);

@@ -12,11 +12,13 @@ const createQRCode = require('./utils/createQRCode');
 (async () => {
   const meta = require('../package.json');
   const config = new Configstore(meta.name);
-  // TODO: Provide option '--clear' to clear local refresh token
-  // TODO: Provide option '--target-path' to specify path in dropbox to save the uploading file
   program
     .version(chalk.cyan(`fox-cli v${meta.version}`), '-v, --version')
     .usage('[--options] <file>')
+    .option(
+      '-d, --directory <dir>',
+      'specify the directory in Dropbox to save the uploaded file',
+    )
     .option(
       '-c, --clear',
       'clear the locally stored refresh token and quit the program',
@@ -28,7 +30,7 @@ const createQRCode = require('./utils/createQRCode');
 })();
 
 async function runCli(file, options, config) {
-  const { clear } = options;
+  const { clear, directory } = options;
 
   if (clear) {
     config.delete(process.env.TOKEN_KEY);
@@ -45,14 +47,14 @@ async function runCli(file, options, config) {
     const dbx = await setupDbx(spinner, config);
 
     spinner.text = 'Uploading...\n';
-    const uploadPath = await upload(dbx, file);
+    const uploadPath = await upload(dbx, file, directory);
 
     spinner.text = 'Creating shared link...\n';
     const sharedLink = await createSharedLink(dbx, uploadPath);
     const qrCode = await createQRCode(sharedLink);
 
     spinner.succeed(
-      `The shared link is created successfully, scan the QR code or use the link: ${chalk.green(
+      `The shared link is created successfully, scan the QR code or use the link: ${chalk.green.underline(
         sharedLink,
       )}`,
     );
