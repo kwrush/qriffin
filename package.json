@@ -20,7 +20,8 @@
     "dotenv": "^8.2.0",
     "dropbox": "^7.0.0",
     "node-fetch": "^2.6.1",
-    "ora": "^5.1.0"
+    "ora": "^5.1.0",
+    "qrcode": "^1.4.4"
   },
   "devDependencies": {
     "eslint": "^7.10.0",
