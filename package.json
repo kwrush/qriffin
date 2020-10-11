@@ -9,6 +9,7 @@
   "author": "kwrush (Kai Wang)",
   "license": "MIT",
   "scripts": {
+    "test": "jest",
     "lint": "eslint --ignore-pattern .gitignore --max-warnings 0",
     "format": "prettier --ignore-path .gitignore --write ."
   },
@@ -31,6 +32,16 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "prettier": "^2.1.2"
+    "jest": "^26.5.3",
+    "prettier": "^2.1.2",
+    "strip-ansi": "^6.0.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageDirectory": "coverage",
+    "testEnvironment": "node"
   }
 }

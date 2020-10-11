@@ -1,6 +1,4 @@
-const program = require('commander');
 const chalk = require('chalk');
-const Configstore = require('configstore');
 const ora = require('ora');
 
 const { tokenKey } = require('./config');
@@ -8,27 +6,7 @@ const setupDbx = require('./setupDbx');
 const { createSharedLink, upload } = require('./utils/dbxUtils');
 const createQRCode = require('./utils/createQRCode');
 
-(async () => {
-  const meta = require('../package.json');
-  const config = new Configstore(meta.name);
-  program
-    .version(chalk.cyan(`fox-cli v${meta.version}`), '-v, --version')
-    .usage('[--options] <file>')
-    .option(
-      '-d, --directory <dir>',
-      'specify the directory in Dropbox to save the uploaded file',
-    )
-    .option(
-      '-c, --clear-token',
-      'clear the locally stored refresh token and quit the program',
-    )
-    .parse(process.argv);
-
-  const [file] = program.args;
-  await runCli(file, program.opts(), config);
-})();
-
-async function runCli(file, options, config) {
+module.exports = async (file, options, config) => {
   const { clearToken, directory } = options;
 
   if (clearToken) {
@@ -64,4 +42,4 @@ async function runCli(file, options, config) {
   }
 
   process.exit(0);
-}
+};

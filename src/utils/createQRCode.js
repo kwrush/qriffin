@@ -6,8 +6,7 @@ module.exports = (link) => {
       if (error) {
         return reject(
           new Error(
-            'Something went wrong on creating QR code: ',
-            error.message,
+            `Something went wrong on creating QR code: ${error.message}`,
           ),
         );
       }
