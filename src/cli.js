@@ -1,10 +1,9 @@
-require('dotenv').config();
-
 const program = require('commander');
 const chalk = require('chalk');
 const Configstore = require('configstore');
 const ora = require('ora');
 
+const { tokenKey } = require('./config');
 const setupDbx = require('./setupDbx');
 const { createSharedLink, upload } = require('./utils/dbxUtils');
 const createQRCode = require('./utils/createQRCode');
@@ -20,7 +19,7 @@ const createQRCode = require('./utils/createQRCode');
       'specify the directory in Dropbox to save the uploaded file',
     )
     .option(
-      '-c, --clear',
+      '-c, --clear-token',
       'clear the locally stored refresh token and quit the program',
     )
     .parse(process.argv);
@@ -30,10 +29,10 @@ const createQRCode = require('./utils/createQRCode');
 })();
 
 async function runCli(file, options, config) {
-  const { clear, directory } = options;
+  const { clearToken, directory } = options;
 
-  if (clear) {
-    config.delete(process.env.TOKEN_KEY);
+  if (clearToken) {
+    config.delete(tokenKey);
     console.log(
       chalk.cyan(
         'Refresh token has been deleted, authorization is required next time.',

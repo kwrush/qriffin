@@ -1,11 +1,16 @@
 const { DropboxAuth, Dropbox } = require('dropbox');
 const fetch = require('node-fetch');
+const { tokenKey, clientId } = require('./config');
 const createAuthServer = require('./createAuthServer');
 
-const tokenKey = process.env.TOKEN_KEY;
-
 module.exports = async (spinner, config) => {
-  const dbxAuth = new DropboxAuth({ fetch, clientId: process.env.CLIENT_ID });
+  if (clientId == null) {
+    throw new Error(
+      'A client id is required, you can specify the client id with `CLIENT_ID` environment variable',
+    );
+  }
+
+  const dbxAuth = new DropboxAuth({ fetch, clientId });
   const refreshToken = config.get(tokenKey);
 
   if (refreshToken == null) {

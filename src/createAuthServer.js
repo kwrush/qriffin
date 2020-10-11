@@ -2,9 +2,9 @@ const http = require('http');
 const opn = require('better-opn');
 const chalk = require('chalk');
 
-const port = process.env.PORT || 3000;
-const baseURL = `${process.env.BASE_URL}:${port}`;
-const redirectURL = `${baseURL}/auth`;
+const { port, baseURL } = require('./config');
+const mainURL = `${baseURL}:${port}`;
+const redirectURL = `${mainURL}/auth`;
 
 module.exports = async (dbxAuth) => {
   const authURL = dbxAuth.getAuthenticationUrl(
@@ -20,7 +20,7 @@ module.exports = async (dbxAuth) => {
   return new Promise((resolve, reject) => {
     http
       .createServer((req, res) => {
-        const url = new URL(req.url, baseURL);
+        const url = new URL(req.url, mainURL);
         const code = url.searchParams.get('code');
 
         if (!code) {
