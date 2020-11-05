@@ -42,7 +42,7 @@ const configStoreMock = {
   delete: jest.fn(),
 };
 
-describe('fox-cli', () => {
+describe('qriffin', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -98,7 +98,7 @@ describe('fox-cli', () => {
 
       const p = await upload(dbxMock, 'file/to/upload');
       expect(dbxMock.filesUpload).toHaveBeenCalledWith({
-        path: '/fox-cli/shared/filename',
+        path: '/qriffin/shared/filename',
         contents: 'contents',
         mode: 'add',
         autorename: true,

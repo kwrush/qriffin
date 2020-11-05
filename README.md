@@ -1,6 +1,6 @@
-# fox-cli
+# qriffin
 
-A small CLI tool to upload file to your Dropbox and create a QR code for the shared link
+A small CLI tool to upload file to your Dropbox and create a QR code for the shared link.
 
 ## Installation
 
@@ -9,8 +9,8 @@ WIP
 ## How to use
 
 ```console
-$ fox -h
-Usage: fox [--options] <file>
+$ qriffin -h
+Usage: qriffin [--options] <file>
 
 Options:
   -v, --version          output the version number

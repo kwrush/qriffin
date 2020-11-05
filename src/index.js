@@ -8,7 +8,7 @@ const runCli = require('./cli');
   const meta = require('../package.json');
   const config = new Configstore(meta.name);
   program
-    .version(chalk.cyan(`fox-cli v${meta.version}`), '-v, --version')
+    .version(chalk.cyan(`qriffin v${meta.version}`), '-v, --version')
     .usage('[--options] <file>')
     .option(
       '-d, --directory <dir>',

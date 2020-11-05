@@ -61,7 +61,7 @@ function openBrowser(url) {
 function success(res) {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(
-    '<html><body><h3>Authorized successfully</h3><p>You can close this tab and enjoy fox-cli</p></body></html>',
+    '<html><body><h3>Authorized successfully</h3><p>You can close this tab and enjoy qriffin</p></body></html>',
   );
 }
 

@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const { createContentStream, getFileName } = require('./fileUtils');
 
-const DEFAULT_DIR = '/fox-cli/shared';
+const DEFAULT_DIR = '/qriffin/shared';
 const DIR_PATTERN =
   '^/[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$';
 

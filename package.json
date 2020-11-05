@@ -1,13 +1,20 @@
 {
-  "name": "fox-cli",
-  "version": "1.0.0",
+  "name": "qriffin",
+  "version": "0.0.0-development",
   "description": "A CLI tool to upload file to your Dropbox and generate QR code for the shared link",
   "main": "src/index.js",
   "bin": {
-    "fox": "bin/fox"
+    "qriffin": "bin/qriffin"
   },
   "author": "kwrush (Kai Wang)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kwrush/qriffin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kwrush/qriffin/issues"
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint --ignore-pattern .gitignore --max-warnings 0",
@@ -43,5 +50,8 @@
     ],
     "coverageDirectory": "coverage",
     "testEnvironment": "node"
+  },
+  "engines": {
+    "node": ">= 10"
   }
 }
