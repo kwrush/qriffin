@@ -1340,10 +1340,10 @@ dotenv@^8.2.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
-dropbox@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/dropbox/-/dropbox-7.0.0.tgz#f23a41ee648a3721b440d071f04cc5ea80d9c8dd"
-  integrity sha512-S0HXid6yd+cIsGtkericSxqTqvRQOA4gUjtgHe5c/xFbiYMsCHRj8tichs/+PW9qBCZlo2Z9csHUda5EARKutw==
+dropbox@^7.3.1:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/dropbox/-/dropbox-7.3.1.tgz#3fc02c18e1866324ce3fff9a1f16ac4e8922d3cd"
+  integrity sha512-9LOVigrkEiLW1TGh+dVXolirY5Lc3/mdzRQt5XmeklK2RgVRKnRgfRExjfGCyAA8IM84sB2bVkJ/txWYf3L/UA==
   dependencies:
     node-fetch "^2.6.1"
 

@@ -5,6 +5,18 @@ const DEFAULT_DIR = '/qriffin/shared';
 const DIR_PATTERN =
   '^/[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$';
 
+const errorHandler = (prefix, error) => {
+  let message = error.message || '';
+  // dropbox sdk error object
+  // { error: `{ error_summary: '...', error: {...} }`, response: ResponseOjbect }
+  if (error.error) {
+    const errorData = JSON.parse(error.error);
+    message = errorData.error_summary;
+  }
+
+  throw new Error(`${prefix}${message ? `: ${message}` : ''}`);
+};
+
 // TOOD: Improve error message
 const upload = async (dbx, file, directory = DEFAULT_DIR) => {
   if (
@@ -20,29 +32,29 @@ const upload = async (dbx, file, directory = DEFAULT_DIR) => {
 
   const contents = await createContentStream(file);
 
-  const filemeta = await dbx.filesUpload({
-    path: `${directory}/${getFileName(file)}`,
-    contents,
-    mode: 'add',
-    autorename: true,
-    mute: true,
-    strict_conflict: false,
-  });
+  try {
+    const { result } = await dbx.filesUpload({
+      path: `${directory}/${getFileName(file)}`,
+      contents,
+      mode: 'add',
+      autorename: true,
+      mute: true,
+      strict_conflict: false,
+    });
 
-  if (filemeta.status >= 400) {
-    throw new Error('Cannot upload file');
+    return result.path_lower;
+  } catch (error) {
+    errorHandler('Cannot upload file', error);
   }
-
-  return filemeta.result.path_lower;
 };
 
 const createSharedLink = async (dbx, path) => {
-  const linkmeta = await dbx.sharingCreateSharedLinkWithSettings({ path });
-  if (linkmeta.status >= 400) {
-    throw new Error('Cannot create shared link');
+  try {
+    const { result } = await dbx.sharingCreateSharedLinkWithSettings({ path });
+    return result.url;
+  } catch (error) {
+    errorHandler('Cannot create shared link', error);
   }
-
-  return linkmeta.result.url;
 };
 
 module.exports = {

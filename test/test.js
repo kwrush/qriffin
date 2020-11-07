@@ -107,13 +107,31 @@ describe('qriffin', () => {
       expect(p).toBe('file/in/dropbox');
     });
 
-    it('should throw `cannot upload` error', async () => {
+    it('should throw common error message', async () => {
       const dbxMock = {
-        filesUpload: jest.fn().mockResolvedValue({ status: 400 }),
+        filesUpload: jest.fn().mockImplementation(() => {
+          throw new Error('error message');
+        }),
+      };
+
+      await expect(
+        upload(dbxMock, '/file/to/upload'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Cannot upload file: error message"`,
+      );
+    });
+
+    it('should throw uploading rejected error', async () => {
+      const dbxMock = {
+        filesUpload: jest.fn().mockRejectedValue({
+          error: JSON.stringify({ error_summary: 'upload rejected' }),
+        }),
       };
       await expect(
         upload(dbxMock, 'file/to/upload'),
-      ).rejects.toThrowErrorMatchingInlineSnapshot(`"Cannot upload file"`);
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Cannot upload file: upload rejected"`,
+      );
     });
 
     it('should create shared link', async () => {
@@ -129,17 +147,19 @@ describe('qriffin', () => {
       expect(link).toBe('sharedlink');
     });
 
-    it('should throw `cannot create shared link` error', async () => {
+    it('should throw creating shared link rejected error', async () => {
       const dbxMock = {
-        sharingCreateSharedLinkWithSettings: jest
-          .fn()
-          .mockResolvedValue({ status: 400 }),
+        sharingCreateSharedLinkWithSettings: jest.fn().mockRejectedValue({
+          error: JSON.stringify({
+            error_summary: 'creating shared link rejected',
+          }),
+        }),
       };
 
       await expect(
         createSharedLink(dbxMock, 'file/to/share'),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `"Cannot create shared link"`,
+        `"Cannot create shared link: creating shared link rejected"`,
       );
     });
   });
