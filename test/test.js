@@ -6,7 +6,6 @@ const runCli = require('../src/cli');
 const setupDbx = require('../src/setupDbx');
 const { upload, createSharedLink } = require('../src/utils/dbxUtils');
 const createQRCode = require('../src/utils/createQRCode');
-const { expect } = require('@jest/globals');
 
 jest.mock('ora', () => () => ({
   start: () => ({
@@ -16,7 +15,7 @@ jest.mock('ora', () => () => ({
 }));
 
 jest.mock('qrcode', () => ({
-  toString: jest.fn((_text, _opt, cb) => cb(null, 'qrcode')),
+  toString: jest.fn().mockResolvedValue('qrcode'),
 }));
 
 jest.spyOn(console, 'log').mockImplementation(() => {});
@@ -157,7 +156,7 @@ describe('qriffin', () => {
     });
 
     it('should throw error', async () => {
-      QRCode.toString = jest.fn((_text, _opt, cb) => cb(new Error('error')));
+      QRCode.toString = jest.fn().mockRejectedValue(new Error('error'));
       await expect(createQRCode).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Something went wrong on creating QR code: error"`,
       );
