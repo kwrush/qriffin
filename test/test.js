@@ -4,11 +4,7 @@ const QRCode = require('qrcode');
 const createAuthServer = require('../src/createAuthServer');
 const runCli = require('../src/cli');
 const setupDbx = require('../src/setupDbx');
-const {
-  upload,
-  createSharedLink,
-  checkSharedLinkExists,
-} = require('../src/utils/dbxUtils');
+const { upload, createSharedLink } = require('../src/utils/dbxUtils');
 const createQRCode = require('../src/utils/createQRCode');
 
 jest.mock('ora', () => () => ({
