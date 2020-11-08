@@ -48,10 +48,28 @@ const upload = async (dbx, file, directory = DEFAULT_DIR) => {
   }
 };
 
+const checkSharedLinkExists = async (dbx, path) => {
+  const {
+    result: { links },
+  } = await dbx.sharingListSharedLinks({ path });
+
+  if (Array.isArray(links) && links.length > 0) {
+    const [{ url }] = links;
+    return url;
+  }
+
+  return undefined;
+};
+
 const createSharedLink = async (dbx, path) => {
   try {
-    const { result } = await dbx.sharingCreateSharedLinkWithSettings({ path });
-    return result.url;
+    const res = await checkSharedLinkExists(dbx, path);
+    if (res) return res;
+
+    const {
+      result: { url },
+    } = await dbx.sharingCreateSharedLinkWithSettings({ path });
+    return url;
   } catch (error) {
     errorHandler('Cannot create shared link', error);
   }
@@ -59,5 +77,6 @@ const createSharedLink = async (dbx, path) => {
 
 module.exports = {
   upload,
+  checkSharedLinkExists,
   createSharedLink,
 };

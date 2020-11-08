@@ -4,7 +4,11 @@ const QRCode = require('qrcode');
 const createAuthServer = require('../src/createAuthServer');
 const runCli = require('../src/cli');
 const setupDbx = require('../src/setupDbx');
-const { upload, createSharedLink } = require('../src/utils/dbxUtils');
+const {
+  upload,
+  createSharedLink,
+  checkSharedLinkExists,
+} = require('../src/utils/dbxUtils');
 const createQRCode = require('../src/utils/createQRCode');
 
 jest.mock('ora', () => () => ({
@@ -30,6 +34,7 @@ jest.mock('../src/utils/fileUtils', () => ({
 }));
 jest.mock('../src/utils/dbxUtils', () => ({
   upload: jest.fn(),
+  checkSharedLinkExists: jest.fn(),
   createSharedLink: jest.fn(),
 }));
 jest.mock('../src/setupDbx', () => jest.fn());
@@ -74,11 +79,12 @@ describe('qriffin', () => {
   });
 
   describe('dbxUtils', () => {
-    let upload, createSharedLink;
+    let upload, createSharedLink, checkSharedLinkExists;
     beforeAll(() => {
       const dbxUtils = jest.requireActual('../src/utils/dbxUtils');
       upload = dbxUtils.upload;
       createSharedLink = dbxUtils.createSharedLink;
+      checkSharedLinkExists = dbxUtils.checkSharedLinkExists;
     });
 
     it('should throw error when directory format is incorrect', async () => {
@@ -86,10 +92,7 @@ describe('qriffin', () => {
     });
 
     it('should pass the correct parameters and return uploaded file path', async () => {
-      const res = {
-        status: 200,
-        result: { path_lower: 'file/in/dropbox' },
-      };
+      const res = { result: { path_lower: 'file/in/dropbox' } };
 
       const dbxMock = {
         filesUpload: jest.fn().mockResolvedValue(res),
@@ -134,13 +137,50 @@ describe('qriffin', () => {
       );
     });
 
-    it('should create shared link', async () => {
+    it('should return the exisitng shared link', async () => {
       const res = {
-        status: 200,
-        result: { url: 'sharedlink' },
+        result: { links: [{ url: 'sharedlink' }], has_more: false },
       };
       const dbxMock = {
+        sharingListSharedLinks: jest.fn().mockResolvedValue(res),
+      };
+
+      const url = await checkSharedLinkExists(dbxMock, 'file/to/share');
+      expect(url).toBe('sharedlink');
+    });
+
+    it('should return undefined when no shared link found', async () => {
+      const res = { result: { links: [], has_more: false } };
+      const dbxMock = {
+        sharingListSharedLinks: jest.fn().mockResolvedValue(res),
+      };
+      const url = await checkSharedLinkExists(dbxMock, 'file/to/share');
+      expect(url).toBeUndefined();
+    });
+
+    it('should create shared link', async () => {
+      const res = { result: { url: 'sharedlink' } };
+      const dbxMock = {
+        sharingListSharedLinks: jest
+          .fn()
+          .mockResolvedValue({ result: { link: [] } }),
         sharingCreateSharedLinkWithSettings: jest.fn().mockResolvedValue(res),
+      };
+
+      const link = await createSharedLink(dbxMock, 'file/to/share');
+      expect(link).toBe('sharedlink');
+    });
+
+    it('should return the shared link that is already existed', async () => {
+      const res = {
+        result: { links: [{ url: 'sharedlink' }], has_more: false },
+      };
+
+      const dbxMock = {
+        sharingListSharedLinks: jest.fn().mockResolvedValue(res),
+        sharingCreateSharedLinkWithSettings: jest
+          .fn()
+          .mockResolvedValue('newlink'),
       };
 
       const link = await createSharedLink(dbxMock, 'file/to/share');
@@ -149,6 +189,9 @@ describe('qriffin', () => {
 
     it('should throw creating shared link rejected error', async () => {
       const dbxMock = {
+        sharingListSharedLinks: jest
+          .fn()
+          .mockResolvedValue({ result: { link: [] } }),
         sharingCreateSharedLinkWithSettings: jest.fn().mockRejectedValue({
           error: JSON.stringify({
             error_summary: 'creating shared link rejected',
