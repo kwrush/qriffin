@@ -30,7 +30,7 @@ const upload = async (dbx, file, directory = DEFAULT_DIR) => {
     );
   }
 
-  const contents = await createContentStream(file);
+  const contents = createContentStream(file);
 
   try {
     const { result } = await dbx.filesUpload({

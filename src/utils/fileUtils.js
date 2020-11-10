@@ -4,8 +4,8 @@ const path = require('path');
 const isFile = (f) => fs.existsSync(f) && fs.statSync(f).isFile();
 
 const isFileSizeOk = (f) => {
-  const stats = fs.statSync(f);
-  return Math.floor(stats.size / 1000000) <= 150;
+  const { size } = fs.statSync(f);
+  return (size / Math.pow(1024, 2)).toFixed(2) <= 150;
 };
 
 const getFileName = (f) => {
