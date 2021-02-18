@@ -4,9 +4,9 @@ const chalk = require('chalk');
 
 const { port, baseURL } = require('./config');
 const mainURL = `${baseURL}:${port}`;
-const redirectURL = `${mainURL}/auth`;
+const redirectURL = new URL('/auth', mainURL);
 
-module.exports = async (dbxAuth) => {
+module.exports = (dbxAuth) => {
   const authURL = dbxAuth.getAuthenticationUrl(
     redirectURL,
     null,
@@ -29,7 +29,7 @@ module.exports = async (dbxAuth) => {
         }
 
         dbxAuth
-          .getAccessTokenFromCode(redirectURL, code)
+          .getAccessTokenFromCode(redirectURL.href, code)
           .then(({ status, result }) => {
             if (status >= 400) {
               throw new Error('Authorization fails');
